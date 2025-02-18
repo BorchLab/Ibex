@@ -38,7 +38,7 @@ suppressMessages(library(patchwork))
 
 To show the multiple options of Ibex, the example data is derived from [this manuscript (https://pubmed.ncbi.nlm.nih.gov/33891889/) - multimodal single-cell characterization of COVID19-associated multisystem inflammatory syndrome in children. The data example built into the package (ibex_example) is derived from randomly sampling cells from Patient 1.
 
-This is a standard workflow based on the [WNN](https://satijalab.org/seurat/articles/weighted_nearest_neighbor_analysis.html) Seurat process. However, Ibex will work for Bioconductor/Single-Cell Experiment workflows as well. The major exception is the addition of ```quietBCRgenes()```, which removed B cell receptor genes from the variable gene list used for ```runPCA()```. 
+This is a standard workflow based on the [WNN](https://satijalab.org/seurat/articles/weighted_nearest_neighbor_analysis.html) Seurat process. However, Ibex will work for Bioconductor/Single-Cell Experiment workflows as well. The major exception is the addition of ```scRepertoire::quietBCRgenes()```, which removed B cell receptor genes from the variable gene list used for ```runPCA()```. 
 
 
 ```{r, eval=FALSE}
@@ -110,15 +110,15 @@ The `combineExpandedBCR()` function supports the following parameters:
 
 | Parameter              | Description                                                               | Default |
 |------------------------|---------------------------------------------------------------------------|---------|
-| `input.data`          | List of data frames containing BCR sequencing results.                    | **Required** |
-| `samples`            | Character vector labeling each sample.                                    | **Required** |
-| `ID`                 | Additional sample labeling (optional).                                   | `NULL` |
-| `call.related.clones` | Whether to group related clones using nucleotide sequences and V genes. | `TRUE` |
-| `threshold`          | Normalized edit distance for clone clustering.                          | `0.85` |
-| `removeNA`          | Remove chains without values.                                           | `FALSE` |
-| `removeMulti`       | Remove barcodes with more than two chains.                             | `FALSE` |
-| `filterMulti`       | Select highest-expressing light and heavy chains.                      | `TRUE` |
-| `filterNonproductive` | Remove nonproductive chains if the column exists.                     | `TRUE` |
+| `input.data`           | List of data frames containing BCR sequencing results.                    | **Required** |
+| `samples`              | Character vector labeling each sample.                                    | **Required** |
+| `ID`                   | Additional sample labeling (optional).                                    | `NULL`  |
+| `call.related.clones`  | Whether to group related clones using nucleotide sequences and V genes.   | `TRUE`  |
+| `threshold`            | Normalized edit distance for clone clustering.                            | `0.85`  |
+| `removeNA`             | Remove chains without values.                                             | `FALSE` |
+| `removeMulti`          | Remove barcodes with more than two chains.                                | `FALSE` |
+| `filterMulti`          | Select highest-expressing light and heavy chains.                         | `TRUE`  |
+| `filterNonproductive`  | Remove nonproductive chains if the column exists.                         | `TRUE`  |
 
 ```{r}
 combined.BCR <- combineExpandedBCR(input.data = list(ibex_vdj),

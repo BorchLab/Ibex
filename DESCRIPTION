@@ -11,14 +11,14 @@ LazyDataCompression: xz
 RoxygenNote: 7.3.2
 biocViews: Software, ImmunoOncology, SingleCell, Classification, Annotation, Sequencing
 Depends: 
-	R (>= 4.0)
+	R (>= 4.0),
+	scRepertoire
 Imports: 
 	immApex,
 	keras3,
 	Matrix, 
 	rlang,
 	SeuratObject,
-	scRepertoire,
 	SingleCellExperiment,
 	stats,
 	SummarizedExperiment

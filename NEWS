@@ -4,8 +4,9 @@ CHANGES IN VERSION 0.99.7
 * Updated Seurat object to v5
 * Updated support for SCE format for ```runIbex()```
 * Update ```CoNGAfy()``` to function with all versions of Seurat
-* Updated ```quietBCRgenes()``` to use VariableFeatures() call for SeuratV5 and backward compatibility.
-* Add ```getHumanIgPseudoGenes()``` to return a list of human Immunoglobulin Pseudo genes that are kept by ```quietBCRgenes()```
+* Add `scRepertoire` as a dependency
+* Updated ```quietBCRgenes()``` to use VariableFeatures() call for SeuratV5 and backward compatibility, and moved definition to `scRepertoire`.
+* Add ```getHumanIgPseudoGenes()``` to return a list of human Immunoglobulin Pseudo genes that are kept by ```quietBCRgenes()```, and moved definition to `scRepertoire`.
 
 ## New Models
 * Added New Light and Heavy Chain Models
