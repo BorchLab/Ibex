@@ -1,3 +1,11 @@
+CHANGES IN VERSION 0.99.22
+--------------------------
+* `Ibex.matrix()` is now an S3 method that now also accepts character vectors of AA sequences as input. See the new docs for more information.
+* Fixed failing tests due to locale differences between systems
+* Add Containerization infrastructure with a `Dockerfile` and `devcontainer/devcontainer.json`
+* Fixed openssl warning in basilisk python code
+* Suppressed unavoidable tensorflow retracing warning in basilisk python code
+
 CHANGES IN VERSION 0.99.21
 ------------------------
 * Delayed Instantiation
@@ -33,6 +41,8 @@ CHANGES IN VERSION 0.99.14
 CHANGES IN VERSION 0.99.12
 ------------------------
 * Basilisk conversion
+* Added package level documentation. Now `?Ibex` can be run.
+* Added lifecycle dependency
 
 CHANGES IN VERSION 0.99.11
 ------------------------

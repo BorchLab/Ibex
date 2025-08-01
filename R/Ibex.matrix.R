@@ -22,6 +22,12 @@
 #' @param input.data Input data, which can be:
 #'   - A Single Cell Object in Seurat or SingleCellExperiment format
 #'   - The output of [scRepertoire::combineBCR()] or [combineExpandedBCR()]
+#'   - `r lifecycle::badge("experimental")` A character vector of amino acid
+#'   heavy and/or light chain sequences. If an element has no underscore, it's
+#'   assumed to be heavy chain. If it is two sequences joined by an underscore,
+#'   it is assumed to be the heavy and light chain. To represent pure light
+#'   chains, format elements as None_AMINOACID. If the vector is named, the
+#'   names will be treated as barcodes.
 #' @param chain Character. Specifies which chain to analyze:
 #'   - "Heavy" for the heavy chain
 #'   - "Light" for the light chain
@@ -36,7 +42,7 @@
 #' @param encoder.input Character. Specifies the input features for the encoder model. Options include:
 #'   - Amino Acid Properties: "atchleyFactors", "crucianiProperties", "kideraFactors", "MSWHIM","tScales", "zScales"
 #'   - "OHE" for One Hot Encoding 
-#' @param geometric.theta Numeric. Angle (in radians) for the geometric 
+#' @param geometric.theta Numeric. Angle (in radians) for the geometric
 #' transformation. Only used when `method = "geometric"`.
 #' @param species Character. Default is "Human" or "Mouse".
 #' @param verbose Logical. Whether to print progress messages. Default is TRUE.
@@ -48,11 +54,57 @@
 #' @importFrom immApex propertyEncoder onehotEncoder geometricEncoder getIR
 #' @importFrom stats complete.cases
 #' @importFrom tensorflow tf
-#' 
-#' @seealso 
-#' [immApex::propertyEncoder()], 
-#' [immApex::geometricEncoder()]
-Ibex.matrix <- function(input.data, 
+#'
+#' @seealso [immApex::propertyEncoder()], [immApex::geometricEncoder()]
+Ibex.matrix <- function(input.data, ...) {
+  UseMethod("Ibex.matrix", input.data)
+}
+
+#' @export
+Ibex.matrix.character <- function(input.data, ...) {
+
+  infer_ct_gene <- function(seq) {
+
+    aas <- toupper(strsplit(gsub("None", "", seq), "")[[1]])
+    if (any(!(aas %in% c(amino.acids, "_")))) {
+      stop("a character that isn't an amino acid or underscore isn't allowed")
+    }
+
+    underscore_count <- sum(aas == "_")
+    if (underscore_count > 1) {
+      stop("invalid input, only 1 underscore allowed")
+    }
+
+    if (underscore_count == 0L) {
+      return("NA.VH.NA.NA")
+    }
+
+    left_sequence <- strsplit(seq, "_")[[1]][1]
+    right_sequence <- strsplit(seq, "_")[[1]][2]
+    if (identical(left_sequence, "None")) {
+      return("NA.NA.NA.NA_NA.VL.NA.NA")
+    } else if (identical(right_sequence, "None")) {
+      return("NA.VH.NA.NA")
+    }
+
+    "NA.VH.NA.NA_NA.VL.NA.NA"
+  }
+
+  input.data <- data.frame(
+    row.names = NULL,
+    barcode = if (!is.null(names(input.data)))
+      names(input.data)
+    else
+      as.character(seq_along(input.data)),
+    CTaa = input.data,
+    CTgene = sapply(input.data, infer_ct_gene)
+  )
+
+  Ibex.matrix.default(input.data, ...)
+}
+
+#' @export
+Ibex.matrix.default <- function(input.data, 
                         chain = c("Heavy", "Light"), 
                         method = c("encoder", "geometric"),
                         encoder.model = c("CNN", "VAE", "CNN.EXP", "VAE.EXP"), 
@@ -85,7 +137,7 @@ Ibex.matrix <- function(input.data,
   if (expanded.sequences) {
     #Quick Check to see if there are - corresponding to CDR1-CDR2-CDR3
     if (all(grepl("-", BCR[,"cdr3_aa"]))) {
-      stop("Expanded sequences are not properly formated, please use 
+      stop("Expanded sequences are not properly formatted, please use 
            combineExpandedBCR().")
     }
     BCR[,"cdr3_aa"] <- gsub("-", "_", BCR[,"cdr3_aa"])
@@ -122,16 +174,22 @@ Ibex.matrix <- function(input.data,
                                   chain        = chain,
                                   encoder.input = encoder.input,
                                   encoder.model = encoder.model)
-    #Getting Reduction 
+    #Getting Reduction
     reduction <- basiliskRun(
       env = IbexEnv,
       fun = function(mpath, xmat) {
+
+        warnings <- reticulate::import("warnings", delay_load = FALSE)
+        warnings$filterwarnings(
+          "ignore", message = ".*tf.function retracing.*"
+        )
+
         keras <- reticulate::import("keras", delay_load = FALSE)
-        model <- NULL 
-        pred <- NULL  
+        model <- NULL
+        pred <- NULL
         
         tryCatch({
-          model <- keras$models$load_model(mpath)  
+          model <- keras$models$load_model(mpath)
           pred  <- model$predict(xmat)
           as.array(pred) # This will be the return value
         }, finally = {
