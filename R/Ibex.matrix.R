@@ -122,16 +122,22 @@ Ibex.matrix <- function(input.data,
                                   chain        = chain,
                                   encoder.input = encoder.input,
                                   encoder.model = encoder.model)
-    #Getting Reduction 
+    #Getting Reduction
     reduction <- basiliskRun(
       env = IbexEnv,
       fun = function(mpath, xmat) {
+
+        warnings <- reticulate::import("warnings", delay_load = FALSE)
+        warnings$filterwarnings(
+          "ignore", message = ".*tf.function retracing.*"
+        )
+
         keras <- reticulate::import("keras", delay_load = FALSE)
-        model <- NULL 
-        pred <- NULL  
+        model <- NULL
+        pred <- NULL
         
         tryCatch({
-          model <- keras$models$load_model(mpath)  
+          model <- keras$models$load_model(mpath)
           pred  <- model$predict(xmat)
           as.array(pred) # This will be the return value
         }, finally = {

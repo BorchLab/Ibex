@@ -1,3 +1,9 @@
+CHANGES IN VERSION 0.99.22
+--------------------------
+* Add Containerization infrastructure with a `Dockerfile` and `devcontainer/devcontainer.json`
+* Fixed openssl warning in basilisk python code
+* Suppressed unavoidable tensorflow retracing warning in basilisk python code
+
 CHANGES IN VERSION 0.99.21
 ------------------------
 * Delayed Instantiation
