@@ -4,23 +4,19 @@
 \alias{Ibex.matrix}
 \title{Ibex Matrix Interface}
 \usage{
-Ibex.matrix(
-  input.data,
-  chain = c("Heavy", "Light"),
-  method = c("encoder", "geometric"),
-  encoder.model = c("CNN", "VAE", "CNN.EXP", "VAE.EXP"),
-  encoder.input = c("atchleyFactors", "crucianiProperties", "kideraFactors", "MSWHIM",
-    "tScales", "OHE"),
-  geometric.theta = pi/3,
-  species = "Human",
-  verbose = TRUE
-)
+Ibex.matrix(input.data, ...)
 }
 \arguments{
 \item{input.data}{Input data, which can be:
 \itemize{
 \item A Single Cell Object in Seurat or SingleCellExperiment format
 \item The output of \code{\link[scRepertoire:combineBCR]{scRepertoire::combineBCR()}} or \code{\link[=combineExpandedBCR]{combineExpandedBCR()}}
+\item \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} A character vector of amino acid
+heavy and/or light chain sequences. If an element has no underscore, it's
+assumed to be heavy chain. If it is two sequences joined by an underscore,
+it is assumed to be the heavy and light chain. To represent pure light
+chains, format elements as None_AMINOACID. If the vector is named, the
+names will be treated as barcodes.
 }}
 
 \item{chain}{Character. Specifies which chain to analyze:
@@ -81,6 +77,5 @@ ibex_values <- Ibex.matrix(ibex_example,
 
 }
 \seealso{
-\code{\link[immApex:sequenceEncoder]{immApex::propertyEncoder()}},
-\code{\link[immApex:sequenceEncoder]{immApex::geometricEncoder()}}
+\code{\link[immApex:sequenceEncoder]{immApex::propertyEncoder()}}, \code{\link[immApex:sequenceEncoder]{immApex::geometricEncoder()}}
 }
