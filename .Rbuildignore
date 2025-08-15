@@ -9,3 +9,9 @@
 ^__autograph_generated_filezt06eymn\.py$
 ^\.github$
 ^LICENSE\.md$
+^\.devcontainer
+^\.trigger_build$
+^Dockerfile$
+^dev
+^\.BBSoptions$
+^\.vscode

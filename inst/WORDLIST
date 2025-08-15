@@ -1,4 +1,5 @@
 ADT
+AMINOACID
 Atchley
 Autoencoded
 Autoencoder
@@ -55,12 +56,10 @@ combineBCR
 contig
 crucianiProperties
 csv
-customizable
 embeddings
 gp
 hydrophobicity
 ident
-identOriginal
 immApex
 interpretability
 keras
