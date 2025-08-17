@@ -1,3 +1,7 @@
+CHANGES IN VERSION 0.99.27
+------------------------
+* Remove `.onLoad()` manual basilisk caching config
+
 CHANGES IN VERSION 0.99.21
 ------------------------
 * Delayed Instantiation
