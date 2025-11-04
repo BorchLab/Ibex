@@ -1,5 +1,4 @@
-#' @import basilisk
-IbexEnv <- BasiliskEnvironment(
+IbexEnv <-  basilisk::BasiliskEnvironment(
   envname = "IbexEnv",
   pkgname = "Ibex",
   packages = c(

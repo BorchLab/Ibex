@@ -1,0 +1,13 @@
+{
+    "name": "Ibex devcontainer",
+    "shutdownAction": "none",
+    "build": {
+        "context": "..",
+        "dockerfile": "../Dockerfile"
+    },
+    "runArgs": [
+        // to use GPUs in container uncomment next line
+        // "--gpus=all",
+        "--name=ibex-devbox"
+    ]
+}
