@@ -8,6 +8,7 @@
 - Add Docker infrastructure with `Dockerfile` and `.devcontainer/devcontainer.json`
 - Add `.markdownlint.json` to sourcecode
 - Improved testthat compatibility across platforms
+- Improve adherence to verbosity arguments
 
 # Ibex 1.0.0
 
