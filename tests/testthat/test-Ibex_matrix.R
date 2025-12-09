@@ -5,15 +5,15 @@ test_that("Ibex_matrix handles incorrect inputs gracefully", {
 
   local_reproducible_output(unicode = FALSE)
 
-  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Middle", method = "encoder"),
+  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Middle", method = "encoder", verbose = FALSE),
                "'arg' should be one of \"Heavy\", \"Light\"")
-  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "xyz"),
+  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "xyz", verbose = FALSE),
                "'arg' should be one of \"encoder\", \"geometric\"")
-  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "encoder", encoder.model = "ABC"),
+  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "encoder", encoder.model = "ABC", verbose = FALSE),
                "'arg' should be one of \"CNN\", \"VAE\", \"CNN.EXP\", \"VAE.EXP\"")
-  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "encoder", encoder.input = "XYZ"),
+  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "encoder", encoder.input = "XYZ", verbose = FALSE),
                "arg' should be one of \"atchleyFactors\", \"crucianiProperties\", \"kideraFactors\", \"MSWHIM\", \"tScales\", \"OHE\"")
-  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "geometric", geometric.theta = "not_numeric"),
+  expect_error(Ibex_matrix(input.data = ibex_example, chain = "Heavy", method = "geometric", geometric.theta = "not_numeric", verbose = FALSE),
                "non-numeric argument to mathematical function")
 })
 

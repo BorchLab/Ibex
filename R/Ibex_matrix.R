@@ -134,7 +134,7 @@ Ibex_matrix <- function(input.data,
         
         tryCatch({
           model <- keras$models$load_model(mpath)  
-          pred  <- model$predict(xmat)
+          pred  <- model$predict(xmat, verbose = if (verbose) "auto" else 0)
           as.array(pred) # This will be the return value
         }, finally = {
           rm(pred)
@@ -151,7 +151,7 @@ Ibex_matrix <- function(input.data,
   } else if (method == "geometric") {
     if (verbose) print("Performing geometric transformation...")
     BCR[,"cdr3_aa"] <- gsub("-", "", BCR[,"cdr3_aa"])
-    reduction <- suppressMessages(geometricEncoder(BCR[,"cdr3_aa"], theta = geometric.theta))[[3]]
+    reduction <- geometricEncoder(BCR[,"cdr3_aa"], theta = geometric.theta, verbose = FALSE)[[3]]
   }
   reduction <- as.data.frame(reduction)
   barcodes <- BCR[,"barcode"]
