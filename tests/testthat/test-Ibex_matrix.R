@@ -75,3 +75,58 @@ test_that("Ibex_matrix handles different species options", {
   expect_true(all(grepl("^Ibex_", colnames(result1))))
   expect_true(all(grepl("^Ibex_", colnames(result2))))
 })
+
+test_that("Ibex_matrix works with character vector input", {
+  # Test with unnamed vector
+  sequences <- c("CARDYWGQGTLVTVSS", "CARDSSGYWGQGTLVTVSS", "CARDTGYWGQGTLVTVSS")
+  result <- Ibex_matrix(input.data = sequences, 
+                        chain = "Heavy", 
+                        method = "geometric",
+                        verbose = FALSE)
+  expect_true(is.data.frame(result))
+  expect_equal(nrow(result), 3)
+  expect_equal(rownames(result), c("1", "2", "3"))
+  expect_true(all(grepl("^Ibex_", colnames(result))))
+  
+  # Test with named vector
+  named_sequences <- c(cell1 = "CARDYWGQGTLVTVSS", cell2 = "CARDSSGYWGQGTLVTVSS")
+  result_named <- Ibex_matrix(input.data = named_sequences, 
+                              chain = "Heavy", 
+                              method = "geometric",
+                              verbose = FALSE)
+  expect_equal(rownames(result_named), c("cell1", "cell2"))
+})
+
+test_that("Ibex_matrix character input validates amino acids", {
+  # Test with invalid characters
+  bad_sequences <- c("CARDYW123", "CARDSSGYW")
+  expect_error(
+    Ibex_matrix(input.data = bad_sequences, chain = "Heavy", method = "geometric", verbose = FALSE),
+    "Invalid character"
+  )
+})
+
+test_that("Ibex_matrix character input works with light chain", {
+  sequences <- c("CQQYNSYPLTFG", "CQQSYSTPLTFG")
+  result <- Ibex_matrix(input.data = sequences, 
+                        chain = "Light", 
+                        method = "geometric",
+                        verbose = FALSE)
+  expect_true(is.data.frame(result))
+  expect_equal(nrow(result), 2)
+})
+
+test_that("Ibex_matrix character input works with encoder method", {
+  skip_if_py_not_installed(c("keras", "numpy"))
+  sequences <- c("CARDYWGQGTLVTVSS", "CARDSSGYWGQGTLVTVSS")
+  result <- Ibex_matrix(input.data = sequences, 
+                        chain = "Heavy", 
+                        method = "encoder",
+                        encoder.model = "VAE",
+                        encoder.input = "atchleyFactors",
+                        species = "Human",
+                        verbose = FALSE)
+  expect_true(is.data.frame(result))
+  expect_equal(nrow(result), 2)
+  expect_true(all(grepl("^Ibex_", colnames(result))))
+})

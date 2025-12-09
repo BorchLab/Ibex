@@ -1,6 +1,7 @@
 # Ibex Development Version
 
-- removed rlang from Imports
+- `Ibex_matrix()` now accepts character vectors of amino acid sequences directly
+- removed rlang from Imports, added lifecycle
 - Reformatted `NEWS` and `README.md`
 - As per `basilisk` documentation:
     - Add `.BBSoptions` with `UnsupportedPlatforms: win32`

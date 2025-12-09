@@ -33,6 +33,7 @@ Suggests:
 	ggplot2,
 	kableExtra,
 	knitr, 
+	lifecycle,
 	markdown,
 	mumosa,
 	patchwork,
