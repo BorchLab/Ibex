@@ -1,6 +1,7 @@
 # Ibex Development Version
 
-- removed rlang from Imports
+- `Ibex_matrix()` now accepts character vectors of amino acid sequences directly
+- removed rlang from Imports, added lifecycle
 - Reformatted `NEWS` and `README.md`
 - As per `basilisk` documentation:
     - Add `.BBSoptions` with `UnsupportedPlatforms: win32`
@@ -8,6 +9,7 @@
 - Add Docker infrastructure with `Dockerfile` and `.devcontainer/devcontainer.json`
 - Add `.markdownlint.json` to sourcecode
 - Improved testthat compatibility across platforms
+- Improve adherence to verbosity arguments
 
 # Ibex 1.0.0
 

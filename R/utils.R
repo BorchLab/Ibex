@@ -2,6 +2,46 @@
 
 amino.acids <- c("A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
 
+# Convert a character vector of amino acid sequences to a BCR data.frame
+# that getIR() can process
+.convert_aa_vector_to_bcr_df <- function(sequences, chain) {
+  # Validate input contains only valid amino acids (and hyphens for expanded)
+  for (i in seq_along(sequences)) {
+    seq <- sequences[i]
+    # Remove hyphens for validation (allowed for CDR1-CDR2-CDR3 format)
+    aas <- toupper(strsplit(gsub("-", "", seq), "")[[1]])
+    invalid <- aas[!(aas %in% amino.acids)]
+    if (length(invalid) > 0) {
+      stop(
+        "Invalid character(s) '", paste(unique(invalid), collapse = "', '"),
+        "' found in sequence ", i, ". Only standard amino acids",
+        " (and hyphens for expanded CDR1-CDR2-CDR3 format) are allowed."
+      )
+    }
+  }
+  
+  # Format CTaa and CTgene based on chain
+
+  # getIR() expects Heavy_Light format, where Light is in position 2 after "_"
+  if (chain == "Heavy") {
+    ctaa <- sequences  # Heavy chain is in position 1 (no underscore needed)
+    ctgene <- "NA.VH.NA.NA"
+  } else {
+    # Light chain needs to be in position 2: "None_SEQUENCE"
+    ctaa <- paste0("None_", sequences)
+    ctgene <- "None_NA.VL.NA.NA"
+  }
+  
+  # Build data.frame compatible with getIR()
+  data.frame(
+    row.names = NULL,
+    barcode = if (!is.null(names(sequences))) names(sequences) 
+              else as.character(seq_along(sequences)),
+    CTaa = ctaa,
+    CTgene = ctgene
+  )
+}
+
 # Add to meta data some of the metrics calculated
 #' @importFrom SingleCellExperiment colData
 add.meta.data <- function(sc, meta, header) {

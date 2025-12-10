@@ -21,10 +21,21 @@
 #'                            chain = "Heavy",
 #'                            method = "geometric",
 #'                            geometric.theta = pi)
+#' 
+#' # Using a character vector of amino acid sequences
+#' sequences <- c("CARDYW", "CARDSSGYW", "CARDTGYW")
+#' ibex_values <- Ibex_matrix(sequences, 
+#'                            chain = "Heavy",
+#'                            method = "geometric")
 #'
 #' @param input.data Input data, which can be:
 #'   - A Single Cell Object in Seurat or SingleCellExperiment format
 #'   - The output of [scRepertoire::combineBCR()] or [combineExpandedBCR()]
+#'   - `r lifecycle::badge("experimental")` A character vector of amino acid
+#'   sequences. The `chain` parameter specifies whether these are heavy or 
+#'   light chain sequences. For expanded models (CNN.EXP/VAE.EXP), sequences
+#'   should be formatted as CDR1-CDR2-CDR3 separated by hyphens. If the vector
+#'   is named, the names will be used as row names in the output.
 #' @param chain Character. Specifies which chain to analyze:
 #'   - "Heavy" for the heavy chain
 #'   - "Light" for the light chain
@@ -74,6 +85,11 @@ Ibex_matrix <- function(input.data,
     expanded.sequences <- grepl(".EXP", encoder.model)
   } else {
     expanded.sequences <- FALSE
+  }
+  
+  # Handle character vector input - convert to data.frame format for getIR()
+  if (is.character(input.data)) {
+    input.data <- .convert_aa_vector_to_bcr_df(input.data, chain)
   }
   
   # Define loci based on chain selection
@@ -134,7 +150,7 @@ Ibex_matrix <- function(input.data,
         
         tryCatch({
           model <- keras$models$load_model(mpath)  
-          pred  <- model$predict(xmat)
+          pred  <- model$predict(xmat, verbose = if (verbose) "auto" else 0)
           as.array(pred) # This will be the return value
         }, finally = {
           rm(pred)
@@ -151,7 +167,7 @@ Ibex_matrix <- function(input.data,
   } else if (method == "geometric") {
     if (verbose) print("Performing geometric transformation...")
     BCR[,"cdr3_aa"] <- gsub("-", "", BCR[,"cdr3_aa"])
-    reduction <- suppressMessages(geometricEncoder(BCR[,"cdr3_aa"], theta = geometric.theta))[[3]]
+    reduction <- geometricEncoder(BCR[,"cdr3_aa"], theta = geometric.theta, verbose = FALSE)[[3]]
   }
   reduction <- as.data.frame(reduction)
   barcodes <- BCR[,"barcode"]
@@ -159,5 +175,3 @@ Ibex_matrix <- function(input.data,
   colnames(reduction) <- paste0("Ibex_", seq_len(ncol(reduction)))
   return(reduction)
 }
-
-
