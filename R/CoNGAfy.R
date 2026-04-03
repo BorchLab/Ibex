@@ -192,7 +192,6 @@ grabAssay <- function(input.data, assay) {
 }
 
 # Calculate mean across individual clones
-#' @importFrom rlang %||%
 #' @importFrom Matrix sparse.model.matrix colSums
 #' @importFrom SummarizedExperiment assay
 #' @importFrom SeuratObject GetAssayData

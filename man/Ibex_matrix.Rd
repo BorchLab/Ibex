@@ -21,6 +21,11 @@ Ibex_matrix(
 \itemize{
 \item A Single Cell Object in Seurat or SingleCellExperiment format
 \item The output of \code{\link[scRepertoire:combineBCR]{scRepertoire::combineBCR()}} or \code{\link[=combineExpandedBCR]{combineExpandedBCR()}}
+\item \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} A character vector of amino acid
+sequences. The \code{chain} parameter specifies whether these are heavy or
+light chain sequences. For expanded models (CNN.EXP/VAE.EXP), sequences
+should be formatted as CDR1-CDR2-CDR3 separated by hyphens. If the vector
+is named, the names will be used as row names in the output.
 }}
 
 \item{chain}{Character. Specifies which chain to analyze:
@@ -81,6 +86,12 @@ ibex_values <- Ibex_matrix(ibex_example,
                            chain = "Heavy",
                            method = "geometric",
                            geometric.theta = pi)
+
+# Using a character vector of amino acid sequences
+sequences <- c("CARDYW", "CARDSSGYW", "CARDTGYW")
+ibex_values <- Ibex_matrix(sequences, 
+                           chain = "Heavy",
+                           method = "geometric")
 
 }
 \seealso{
