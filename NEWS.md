@@ -7,6 +7,20 @@
 * Updated CI workflows to target `devel` branch
 * Converted NEWS to NEWS.md format
 * Added automated GitHub Release workflow via tags
+
+## v1.0.0
+* Integration of Ibex with immApex
+* Updated Seurat object to v5
+* Updated support for SCE format for `runIbex()`
+* Update `CoNGAfy()` to function with all versions of Seurat
+* Updated `quietBCRgenes()` to use VariableFeatures() call for SeuratV5 and backward compatibility
+* Added `getHumanIgPseudoGenes()` to return a list of human Immunoglobulin Pseudo genes
+* Added new light and heavy chain models with encoding methods: OHE, atchleyFactors, crucianiProperties, kideraFactors, MSWHIM, tScales, zScales
+* Trained convolutional and variational autoencoders (architecture: 512-256-128-256-512)
+* Implementing GitHub action workflows
+* Adding testthat framework
+* Deprecated clonalCommunity
+* Added geometric encoding using the BLOSUM62 matrix
 * `Ibex_matrix()` now accepts character vectors of amino acid sequences directly
 * Removed rlang from Imports, added lifecycle
 * As per `basilisk` documentation:
