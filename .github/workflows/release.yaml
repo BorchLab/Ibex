@@ -27,8 +27,8 @@ jobs:
         id: notes
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          # Extract section between this version header and the next version header
-          awk "/^## v${TAG_VERSION}$/,/^## /" NEWS.md | head -n -1 | tail -n +2 > release_notes.txt
+          # Extract content between this version's ## header and the next ## header
+          awk "/^## v${TAG_VERSION}/{found=1; next} /^## /{found=0} found" NEWS.md > release_notes.txt
           if [ ! -s release_notes.txt ]; then
             echo "::error::No release notes found for v${TAG_VERSION} in NEWS.md"
             exit 1
