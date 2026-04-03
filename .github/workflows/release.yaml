@@ -1,0 +1,45 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create Release
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag matches DESCRIPTION version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION=$(grep '^Version:' DESCRIPTION | sed 's/Version: //')
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Tag version ($TAG_VERSION) does not match DESCRIPTION version ($PKG_VERSION)"
+            exit 1
+          fi
+
+      - name: Extract release notes from NEWS.md
+        id: notes
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          # Extract section between this version header and the next version header
+          awk "/^## v${TAG_VERSION}$/,/^## /" NEWS.md | head -n -1 | tail -n +2 > release_notes.txt
+          if [ ! -s release_notes.txt ]; then
+            echo "::error::No release notes found for v${TAG_VERSION} in NEWS.md"
+            exit 1
+          fi
+          echo "Release notes:"
+          cat release_notes.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_notes.txt
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
