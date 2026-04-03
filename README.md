@@ -4,18 +4,20 @@ Using BCR sequences for graph embedding
 [![R-CMD-check](https://github.com/BorchLab/Ibex/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BorchLab/Ibex/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/BorchLab/Ibex/graph/badge.svg)](https://app.codecov.io/gh/BorchLab/Ibex?branch=master)
 [![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://www.borch.dev/uploads/screpertoire/articles/ibex)
+[![Bioc Release Build](http://www.bioconductor.org/shields/build/release/bioc/Ibex.svg)](http://www.bioconductor.org/checkResults/release/bioc-LATEST/Ibex)
+[![Bioc Devel Build](http://www.bioconductor.org/shields/build/devel/bioc/Ibex.svg)](http://www.bioconductor.org/checkResults/devel/bioc-LATEST/Ibex)
+[![Bioc Downloads](http://www.bioconductor.org/shields/downloads/release/Ibex.svg)](http://bioconductor.org/packages/stats/bioc/Ibex/)
 
 <img align="right" src="https://github.com/BorchLab/Ibex/blob/main/www/ibex_hex.png" width="305" height="352">
 
-## Introduction
 Single-cell sequencing is an integral tool in immunology and oncology, enabling researchers to measure gene expression and immune cell receptor profiling at the level of individual cells. We developed the [scRepertoire](https://github.com/BorchLab/scRepertoire) R package to facilitate the integration of immune receptor and gene expression data. However, leveraging clonal indices for more complex analyses—such as using clonality in cell embedding—remains challenging.
 
 **Ibex** addresses this need by using deep learning to vectorize BCR sequences based on amino acid properties or their underlying order. Ibex is the sister package to [Trex](https://github.com/BorchLab/Trex), which focuses on TCR sequence data.
 
-# System Requirements 
+### System Requirements 
 Ibex has been tested on R versions >= 4.0. For details on required R packages, refer to the package’s DESCRIPTION file. It is designed to work with single-cell objects containing BCR data generated using [scRepertoire](https://github.com/BorchLab/scRepertoire). Ibex has been tested on macOS and Linux.
 
-# Installation
+### Installation
 
 Ibex relies on the [immApex](https://github.com/BorchLab/immApex) API can be installed directly from GitHub: 
 
@@ -46,7 +48,7 @@ BiocManager::install("Ibex")
 
 The main version of Ibex is submitted to Bioconductor (installation instructions will be updated after review). By default, Ibex will automatically pull deep learning models from a [Zenodo repository](https://zenodo.org/records/14919286) and cache them locally.
 
-# Usage/Demos
+### Usage/Demos
 
 Ibex integrates smoothly into most popular R-based single-cell workflows, including **Seurat** and **Bioconductor/SingleCellExperiment.**
 
@@ -56,7 +58,7 @@ See the [vignette](https://www.borch.dev/uploads/screpertoire/articles/ibex) for
 
 <img align="center" src="https://github.com/BorchLab/Ibex/blob/main/www/graphicalAbstract.png">
 
-## Autoencoded Matrix
+#### Autoencoded Matrix
 
 The Ibex algorithm allows users to select BCR-based metrics to return autoencoded values to be used in dimensional reduction. If single-cell objects are not filtered for B cells with BCR,  `Ibex_matrix()` will still return values, however IBEX_1 will be based on the disparity of BCR-containing and BCR-non-containing cells based on the Ibex algorithm. 
 
@@ -65,7 +67,7 @@ library(Ibex)
 my_ibex <- Ibex_matrix(singleObject)
 ```
 
-## Seurat or Single-Cell Experiment
+#### Seurat or Single-Cell Experiment
 
 You can run Ibex within your Seurat or Single-Cell Experiemt workflow. **Importantly** `runIbex()` will automatically filter single-cells that do not contain BCR information in the meta data of the single-cell object. 
 
@@ -82,7 +84,7 @@ seuratObj_Bonly <- runIbex(seuratObj, #The single cell object
 seuratObj_Bonly <- runIbex(seuratObj, reduction.name = "Ibex")
 ```
 
-## After Running Ibex
+#### After Running Ibex
 
 Once the Ibex embeddings are part of your Seurat object, you can use these embeddings to generate a t-SNE or UMAP:
 
@@ -99,7 +101,7 @@ seuratObj <- quietBCRgenes(seuratObj)
 seuratObj <- RunPCA(seuratObj)
 ```
 
-### Running WNN approach
+#### Running WNN approach
 ```r
 seuratObj <- FindMultiModalNeighbors(seuratObj, 
                                      reduction.list = list("pca", "Ibex"), 
