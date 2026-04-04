@@ -102,9 +102,9 @@ Ibex_matrix <- function(input.data,
   # Determine dictionary for sequence encoding
   if (expanded.sequences) {
     #Quick Check to see if there are - corresponding to CDR1-CDR2-CDR3
-    if (all(grepl("-", BCR[,"cdr3_aa"]))) {
+    if (!all(grepl("-", BCR[,"cdr3_aa"]))) {
       stop("Expanded sequences are not properly formated, please use 
-           combineExpandedBCR().")
+           combineExpandedBCR() or ensure each element is CDRs 1, 2, and 3 joined by `-`")
     }
     BCR[,"cdr3_aa"] <- gsub("-", "_", BCR[,"cdr3_aa"])
     dictionary <- c(amino.acids, "_")
